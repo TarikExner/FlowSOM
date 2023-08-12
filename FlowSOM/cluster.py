@@ -4,7 +4,7 @@ import pandas as pd
 from minisom import MiniSom
 from joblib import Parallel, delayed
 
-from .consensus_cluster import ConsensusCluster
+from ._consensus_cluster import ConsensusCluster
 from ._cluster_algorithms import IMPLEMENTED_CLASSIFIERS
 
 def fetch_winning_cluster(som: MiniSom,
@@ -20,7 +20,7 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
             learning_rate: float = 0.5,
             n_iterations: int = 100,
             neighborhood_function = "gaussian",
-            consensus_cluster_algorithm: Literal["AgglomerativeClustering"] = "AgglomerativeClustering",
+            consensus_cluster_algorithm: str = "AgglomerativeClustering",
             consensus_cluster_min_n: int = 10,
             consensus_cluster_max_n: int = 50,
             consensus_cluster_resample_proportion: float = 0.5,
@@ -33,7 +33,9 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
         data = data.values
     
     if consensus_cluster_algorithm not in IMPLEMENTED_CLASSIFIERS:
-        raise NotImplementedError(f"Algorithm not implemented. Please choose from {list(IMPLEMENTED_CLASSIFIERS.keys())}")
+        error_msg = f"Algorithm {consensus_cluster_algorithm} is not implemented. "
+        error_msg += f"Please choose from {list(IMPLEMENTED_CLASSIFIERS.keys())}"
+        raise NotImplementedError(error_msg)
     
     consensus_cluster_algorithm = IMPLEMENTED_CLASSIFIERS[consensus_cluster_algorithm]
     
@@ -53,8 +55,10 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
               verbose = verbose)
     
     weights = som.get_weights()
+
     flattened_weights = weights.reshape(x_dim*y_dim,
                                         n_features)
+    
     cluster_ = ConsensusCluster(consensus_cluster_algorithm,
                                 consensus_cluster_min_n,
                                 consensus_cluster_max_n,
@@ -64,6 +68,10 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
     cluster_.fit(flattened_weights,
                  n_jobs = n_jobs)
     flattened_classes = cluster_.predict_data(flattened_weights)
+    
     map_class = flattened_classes.reshape(x_dim, y_dim)
 
-    return Parallel(n_jobs = n_jobs)(delayed(fetch_winning_cluster)(som, data[i,:], map_class) for i in range(data.shape[0]))
+    return Parallel(n_jobs = n_jobs)(
+        delayed(fetch_winning_cluster)
+        (som, data[i,:], map_class) for i in range(data.shape[0])
+    )
