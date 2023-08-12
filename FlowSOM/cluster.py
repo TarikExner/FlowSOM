@@ -13,7 +13,7 @@ def fetch_winning_cluster(som: MiniSom,
     winner = som.winner(data_entry)
     return cluster_map[winner]
 
-def cluster(data: Union[np.ndarray, pd.DataFrame],
+def flowsom(data: Union[np.ndarray, pd.DataFrame],
             x_dim: int,
             y_dim: int,
             sigma: float = 1,
