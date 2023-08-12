@@ -1,14 +1,12 @@
-from minisom import MiniSom
-
+from typing import Union, Literal
 import numpy as np
 import pandas as pd
+from minisom import MiniSom
+from joblib import Parallel, delayed
 
 from .consensus_cluster import ConsensusCluster
 from ._cluster_algorithms import IMPLEMENTED_CLASSIFIERS
 
-from typing import Union, Literal
-
-import time
 def fetch_winning_cluster(som: MiniSom,
                           data_entry: np.ndarray,
                           cluster_map: np.ndarray) -> int:
@@ -28,6 +26,7 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
             consensus_cluster_resample_proportion: float = 0.5,
             consensus_cluster_n_resamples: int = 10,
             verbose: bool = False,
+            n_jobs: int = None,
             random_state: int = 187):
     
     if isinstance(data, pd.DataFrame):
@@ -40,7 +39,6 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
     
     n_features = data.shape[1]
 
-    start = time.time() 
     som = MiniSom(x = x_dim,
                   y = y_dim,
                   input_len = n_features,
@@ -53,7 +51,6 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
     som.train(data,
               num_iteration = n_iterations,
               verbose = verbose)
-    print("Training took ", time.time()-start, " seconds")
     
     weights = som.get_weights()
     flattened_weights = weights.reshape(x_dim*y_dim,
@@ -62,13 +59,11 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
                                 consensus_cluster_min_n,
                                 consensus_cluster_max_n,
                                 consensus_cluster_n_resamples,
-                                resample_proportion = consensus_cluster_resample_proportion)
-    cluster_.fit(flattened_weights, verbose = True)
-    flattened_class = cluster_.predict_data(flattened_weights)
-    map_class = flattened_class.reshape(x_dim, y_dim)
-    start = time.time()
-    labels = [fetch_winning_cluster(som = som,
-                                  data_entry = data[i, :],
-                                  cluster_map = map_class) for i in range(len(data))]
-    print("Labeling took ", time.time() - start, " seconds")
-    return labels
+                                resample_proportion = consensus_cluster_resample_proportion,
+                                random_state = random_state)
+    cluster_.fit(flattened_weights,
+                 n_jobs = n_jobs)
+    flattened_classes = cluster_.predict_data(flattened_weights)
+    map_class = flattened_classes.reshape(x_dim, y_dim)
+
+    return Parallel(n_jobs = n_jobs)(delayed(fetch_winning_cluster)(som, data[i,:], map_class) for i in range(data.shape[0]))
