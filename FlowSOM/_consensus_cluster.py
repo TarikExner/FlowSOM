@@ -62,7 +62,7 @@ class ConsensusCluster:
             return self.cluster_(n_clusters = k,
                                  random_state = self.random_state)
         except TypeError as e:
-            if "got an unexpected keyword argument" in str(e):
+            if "got an unexpected keyword argument 'random_state'" in str(e):
                 return self.cluster_(n_clusters = k)
 
     def _fit_cdf_area_differences(self,
