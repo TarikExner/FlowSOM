@@ -76,8 +76,8 @@ class ConsensusCluster:
         )
  
     def _calculate_consensus_matrix(self,
-                               k: int,
-                               data: np.ndarray) -> np.ndarray:
+                                    k: int,
+                                    data: np.ndarray) -> np.ndarray:
         # sourcery skip: class-extract-method
         Mk = np.zeros((data.shape[0], data.shape[0]))
         Is = np.zeros((data.shape[0],)*2)
