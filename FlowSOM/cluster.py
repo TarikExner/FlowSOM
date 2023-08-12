@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from .consensus_cluster import ConsensusCluster
+from ._cluster_algorithms import IMPLEMENTED_CLASSIFIERS
 
 from typing import Union, Literal
 
@@ -32,11 +33,17 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
     if isinstance(data, pd.DataFrame):
         data = data.values
     
-    input_len = data.shape[0]
+    if consensus_cluster_algorithm not in IMPLEMENTED_CLASSIFIERS:
+        raise NotImplementedError(f"Algorithm not implemented. Please choose from {list(IMPLEMENTED_CLASSIFIERS.keys())}")
+    
+    consensus_cluster_algorithm = IMPLEMENTED_CLASSIFIERS[consensus_cluster_algorithm]
+    
+    n_features = data.shape[1]
+
     start = time.time() 
     som = MiniSom(x = x_dim,
                   y = y_dim,
-                  input_len = 0,
+                  input_len = n_features,
                   sigma = sigma,
                   learning_rate = learning_rate,
                   neighborhood_function = neighborhood_function,
@@ -50,7 +57,7 @@ def cluster(data: Union[np.ndarray, pd.DataFrame],
     
     weights = som.get_weights()
     flattened_weights = weights.reshape(x_dim*y_dim,
-                                        input_len)
+                                        n_features)
     cluster_ = ConsensusCluster(consensus_cluster_algorithm,
                                 consensus_cluster_min_n,
                                 consensus_cluster_max_n,
