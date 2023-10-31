@@ -7,7 +7,7 @@ The main advantage over the current implementations is the parallelized nature o
 ## Installation
 
 ```
-    pip install flow-som
+    pip install flowsom-clustering
 
 ```
 
