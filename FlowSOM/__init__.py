@@ -1,1 +1,1 @@
-from .cluster import flowsom
+from ._flowsom import flowsom
