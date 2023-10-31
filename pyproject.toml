@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "FlowSOM"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Tarik Exner", email="Tarik.Exner@med.uni-heidelberg.de" },
 ]
@@ -15,12 +15,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
     "scikit-learn",
-    "pandas>=1.0.0",
+    "pandas",
     "numpy",
-    "minisom",
+    "minisom"
 ]
 
 [project.urls]
