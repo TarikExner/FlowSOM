@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "FlowSOM"
+version = "0.0.3"
+authors = [
+  { name="Tarik Exner", email="Tarik.Exner@med.uni-heidelberg.de" },
+]
+description = "Self Organizing Map with parallelized Consensus Clustering"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "scikit-learn",
+    "pandas>=1.0.0",
+    "numpy",
+    "minisom",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/TarikExner/FlowSOM/"
+"Bug Tracker" = "https://github.com/TarikExner/FlowSOM/"
