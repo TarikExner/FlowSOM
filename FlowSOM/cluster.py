@@ -19,7 +19,7 @@ def flowsom(data: Union[np.ndarray, pd.DataFrame],
             sigma: float = 1,
             learning_rate: float = 0.5,
             n_iterations: int = 100,
-            neighborhood_function = "gaussian",
+            neighborhood_function: str = "gaussian",
             consensus_cluster_algorithm: str = "AgglomerativeClustering",
             consensus_cluster_min_n: int = 10,
             consensus_cluster_max_n: int = 50,
@@ -27,7 +27,7 @@ def flowsom(data: Union[np.ndarray, pd.DataFrame],
             consensus_cluster_n_resamples: int = 10,
             verbose: bool = False,
             n_jobs: int = None,
-            random_state: int = 187):
+            random_state: int = 187) -> list[float]:
     
     if isinstance(data, pd.DataFrame):
         data = data.values
