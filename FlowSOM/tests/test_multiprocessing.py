@@ -80,17 +80,17 @@ class original_ConsensusCluster(ConsensusCluster):
             self.L_ if self.deltaK.size > 0 else self.L_
 
 def test_implemented_classifiers():
-    from ..cluster import cluster
+    from .._flowsom import flowsom
     data_array = np.random.randn(100,15)
     with pytest.raises(NotImplementedError):
-        cluster(data_array,
+        flowsom(data_array,
                 x_dim = 50,
                 y_dim = 50,
                 consensus_cluster_algorithm = "somthing")
 
 def test_multiprocessing():
     from minisom import MiniSom
-    from ..cluster import fetch_winning_cluster
+    from .._flowsom import fetch_winning_cluster
     from joblib import Parallel, delayed
     from sklearn.cluster import KMeans
     x_dim = 10
