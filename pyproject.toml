@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "FlowSOM"
+name = "flow-som"
 version = "0.0.7"
 authors = [
   { name="Tarik Exner", email="Tarik.Exner@med.uni-heidelberg.de" },
