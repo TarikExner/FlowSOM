@@ -9,7 +9,7 @@ The main advantage over the current implementations is the parallelized nature o
 ```python
 import numpy as np
 import pandas as pd
-from FlowSOM.cluster import flowsom
+from FlowSOM import flowsom
 
 # import your data via pandas or numpy
 
