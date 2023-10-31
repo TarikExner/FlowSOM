@@ -1,4 +1,4 @@
-from typing import Union, Literal
+from typing import Union
 import numpy as np
 import pandas as pd
 from minisom import MiniSom
