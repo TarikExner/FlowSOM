@@ -4,6 +4,13 @@ Python implementation of the FlowSOM algorithm based on [minisom](https://github
 
 The main advantage over the current implementations is the parallelized nature of the ConsensusClustering.
 
+## Installation
+
+```
+    pip install flow-som
+
+```
+
 ## Basic usage:
 
 ```python
